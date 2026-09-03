@@ -69,6 +69,9 @@ workshop-1/
 │
 ├── notebooks/
 │   └── data_profiling.py
+|
+├── powerbi/
+│   └── workshop dashboard.pbix
 │
 |── results/
 │   ├── result1.csv
