@@ -22,10 +22,10 @@ The requirements for the analysis were as follows:
 | ID     | Requirement                                                                                                                |
 | ------ | -------------------------------------------------------------------------------------------------------------------------- |
 | **R1** | How has the number of hires changed over time?                                                                             |
-| **R2** | ¿Qué tecnologías presentan mayor demanda y mejores resultados de contratación?                                             |
-| **R3** | ¿Qué perfiles de candidatos presentan mejores resultados de contratación según su seniority y experiencia?                 |
-| **R4** | ¿Qué países representan mercados de reclutamiento más atractivos según el volumen de candidatos y su tasa de contratación? |
-| **R5** | ¿Qué tecnologías presentan dificultades para convertir las aplicaciones recibidas en contrataciones?                       |
+| **R2** | Which technologies are in highest demand and yield the best hiring results?                                                |
+| **R3** | Which candidate profiles yield the best hiring results based on their seniority and experience?                            |
+| **R4** | Which countries represent the most attractive recruitment markets in terms of the number of candidates and their hiring rate? |
+| **R5** | Which technologies pose challenges when it comes to converting leads into contracts?                                       |
 
 
 
@@ -37,30 +37,28 @@ El proyecto utiliza como fuente principal el archivo:
 data/raw/candidates.csv
 ```
 
-La extracción se realiza mediante Pandas utilizando `;` como separador.
+The dataset contains information related to applications submitted by candidates, including personal information, location, experience, technology, dates, and assessment results.
 
-El dataset contiene información relacionada con las aplicaciones realizadas por candidatos, incluyendo datos personales, ubicación, experiencia, tecnología, fechas y resultados de evaluaciones.
+Key attributes include:
 
-Entre los principales atributos se encuentran:
-
-| Columna                   | Descripción                      |
+| Column                    | Description                      |
 | ------------------------- | -------------------------------- |
-| First Name                | Nombre del candidato             |
-| Last Name                 | Apellido del candidato           |
-| Email                     | Correo electrónico               |
-| Country                   | País del candidato               |
-| Application Date          | Fecha de aplicación              |
-| YOE                       | Años de experiencia              |
-| Seniority                 | Nivel de seniority               |
-| Technology                | Tecnología asociada              |
-| Code Challenge Score      | Puntaje de la prueba técnica     |
-| Technical Interview Score | Puntaje de la entrevista técnica |
+| First Name                | Candidate's Name                 |
+| Last Name                 | Candidate's Last Name            |
+| Email                     | Email                            |
+| Country                   | Candidate's country              |
+| Application Date          | Effective Date                   |
+| YOE                       | Years of experience              |
+| Seniority                 | Seniority Level                  |
+| Technology                | Related Technology               |
+| Code Challenge Score      | Technical Test Score             |
+| Technical Interview Score | Technical Interview Score         |
 
 ---
 
-# 4. Estructura del proyecto
+# Project Structure
 
-La organización principal del proyecto es la siguiente:
+The main organizational structure of the project is as follows:
 
 ```text
 workshop-1/
@@ -94,134 +92,134 @@ workshop-1/
 
 ---
 
-# 5. Perfilamiento inicial de los datos
+# Initial Data Profiling
 
-El perfilamiento inicial se implementó en:
+Initial profiling was implemented in:
 
 ```text
 notebooks/data_profiling.py
 ```
 
-Este proceso analiza el dataset original sin modificarlo. Para mantener una única fuente de extracción, el script reutiliza la función `extract_data()` definida en `src/extract.py`.
+This process analyzes the original dataset without modifying it. To maintain a single source of data extraction, the script reuses the `extract_data()` function defined in `src/extract.py`.
 
-## Análisis realizados
+## Analyses Conducted
 
-El perfilamiento incluye:
+Data profiling includes:
 
-1. Número de filas y columnas.
-2. Nombres de las columnas y tipos de datos originales.
-3. Identificación de valores faltantes.
-4. Identificación de registros duplicados.
-5. Revisión de valores únicos en variables categóricas.
-6. Análisis del rango de fechas.
-7. Estadísticas descriptivas de variables numéricas.
-8. Validación de los rangos de los puntajes.
-9. Resumen de hallazgos.
+1. Number of rows and columns.
+2. Column names and original data types.
+3. Identification of missing values.
+4. Identification of duplicate records.
+5. Review of unique values in categorical variables.
+6. Analysis of the date range.
+7. Descriptive statistics for numerical variables.
+8. Validation of score ranges.
+9. Summary of findings.
 
-## Hallazgos principales
+## Key Findings
 
-| Aspecto                        | Hallazgo                                                                                                     |
+| Appearance                     | Discovery                                                                                                    |
 | ------------------------------ | ------------------------------------------------------------------------------------------------------------ |
-| Tamaño del dataset             | 50.000 filas y 10 columnas                                                                                   |
-| Valores nulos                  | No se encontraron valores nulos                                                                              |
-| Filas completamente duplicadas | No se encontraron                                                                                            |
-| Emails repetidos               | Existen registros que pueden compartir email, pero representan aplicaciones y no se eliminan automáticamente |
-| Application Date               | Se encontraba como texto y se convirtió posteriormente a tipo fecha                                          |
-| Seniority                      | 7 niveles de seniority                                                                                       |
-| Technology                     | 24 tecnologías diferentes                                                                                    |
-| Country                        | 244 países diferentes                                                                                        |
-| Code Challenge Score           | Valores dentro del rango de 0 a 10                                                                           |
-| Technical Interview Score      | Valores dentro del rango de 0 a 10                                                                           |
+| Dataset size                   | 50,000 rows and 10 columns                                                                                   |
+| Null values                    | No null values found                                                                                         |
+| Completely duplicate rows      | None found                                                                                                   |
+| Duplicate emails               | There are records that may share the same email address, but they represent different applications and are not automatically deleted |
+| Application Date               | Was found as text and was later converted to a date type                                                     |
+| Seniority                      | 7 seniority levels                                                                                       |
+| Technology                     | 24 different technologies                                                                                    |
+| Country                        | 244 different countries                                                                                        |
+| Code Challenge Score           | Values in the range of 0 to 10                                                                           |
+| Technical Interview Score      | Values ranging from 0 to 10                                                                           |
 
-### Decisión sobre registros repetidos
+### Decision on Duplicate Records
 
-Los valores repetidos en la columna `Email` no fueron eliminados automáticamente. El grano definido para el proyecto corresponde a **una aplicación**, por lo que dos registros con el mismo correo pueden representar aplicaciones diferentes.
+Duplicate values in the `Email` column were not automatically deleted. The granularity defined for the project corresponds to **an application**, so two records with the same email address may represent different applications.
 
-Por esta razón, eliminar registros únicamente porque comparten un correo podría ocasionar pérdida de información.
+For this reason, deleting records solely because they share the same email address could result in a loss of information.
 
 ---
 
-# 6. Proceso de extracción
+# 6. Extraction Process
 
-La extracción se implementó en:
+The extraction was implemented in:
 
 ```text
 src/extract.py
 ```
 
-La función principal es:
+The main function is:
 
 ```python
 extract_data()
 ```
 
-Su responsabilidad es únicamente leer el archivo original:
+Its sole responsibility is to read the original file:
 
 ```text
 data/raw/candidates.csv
 ```
 
-El archivo se carga utilizando:
+The file is loaded using:
 
 ```python
 pd.read_csv(source_path, sep=";")
 ```
 
-## Decisiones implementadas
+## Implementation Decisions
 
-Durante la etapa de extracción:
+During the extraction stage:
 
-* Se utiliza el archivo fuente original.
-* El archivo original no se modifica.
-* No se aplican transformaciones de negocio.
-* No se eliminan registros.
-* Se verifica que el archivo exista antes de intentar leerlo.
-* Se retorna un DataFrame con los datos tal como vienen desde el origen.
+* The original source file is used.
+* The original file is not modified.
+* No business transformations are applied.
+* No records are deleted.
+* The file is checked for existence before attempting to read it.
+* A DataFrame is returned with the data exactly as it comes from the source.
 
-Esto permite separar claramente la extracción de las etapas posteriores de preparación y transformación.
+This allows for a clear separation of the extraction stage from the subsequent preparation and transformation stages.
 
 ---
 
-# 7. Preparación y transformación de datos
+# Data Preparation and Transformation
 
-Las transformaciones se implementaron en:
+The transformations were implemented in:
 
 ```text
 src/transform.py
 ```
 
-El proceso se divide en dos etapas principales.
+The process is divided into two main stages.
 
-## 7.1 Preparación de datos
+## Data Preparation
 
-La función:
+The function:
 
 ```python
 prepare_data(df)
 ```
 
-realiza las siguientes acciones:
+performs the following actions:
 
-### Conversión de fecha
+### Date Conversion
 
-La columna:
+The column:
 
 ```text
 Application Date
 ```
 
-se convierte a tipo fecha:
+is converted to a date type:
 
 ```python
 pd.to_datetime(
-    df["Application Date"],
+    df[“Application Date”],
     format="%Y-%m-%d"
 )
 ```
 
-### Limpieza de espacios
+### Removing Spaces
 
-Se eliminan espacios adicionales al inicio y al final de las columnas de texto:
+Extra spaces at the beginning and end of the text columns are removed:
 
 * First Name
 * Last Name
@@ -230,9 +228,9 @@ Se eliminan espacios adicionales al inicio y al final de las columnas de texto:
 * Seniority
 * Technology
 
-### Orden de seniority
+### Seniority Order
 
-Se establece un orden lógico para los niveles de seniority:
+A logical order is established for seniority levels:
 
 ```text
 Intern
@@ -244,34 +242,34 @@ Intern
 → Architect
 ```
 
-Esto facilita posteriormente el análisis ordenado de los perfiles de candidatos.
+This facilitates the subsequent organized analysis of candidate profiles.
 
-### Conversión de variables categóricas
+### Conversion of Categorical Variables
 
-Las columnas:
+The columns:
 
 ```text
 Technology
 Country
 ```
 
-se convierten a variables categóricas.
+are converted to categorical variables.
 
-### Verificación de valores faltantes
+### Checking for Missing Values
 
-Después de la preparación se realiza una verificación adicional para identificar posibles valores nulos.
+After data preparation, an additional check is performed to identify any missing values.
 
 ---
 
-## 7.2 Regla de negocio de contratación
+## Hiring Business Rule
 
-La función:
+The function:
 
 ```python
 apply_business_rules(df)
 ```
 
-implementa la siguiente regla:
+implements the following rule:
 
 ```text
 HIRED =
@@ -280,23 +278,23 @@ AND
 (Technical Interview Score >= 7)
 ```
 
-Es decir, un candidato se considera contratado únicamente cuando obtiene un puntaje igual o superior a 7 en ambas evaluaciones.
+In other words, a candidate is considered hired only when they score 7 or higher on both assessments.
 
-El resultado se almacena en una nueva columna:
+The result is stored in a new column:
 
 ```text
 Hired
 ```
 
-con valores booleanos.
+with Boolean values.
 
-### Decisión importante
+### Important Decision
 
-La transformación **no elimina las aplicaciones no contratadas**.
+The transformation **does not remove unhired applications**.
 
-Esto es necesario porque el grano del modelo es una aplicación y los requerimientos necesitan analizar tanto el total de aplicaciones como las contrataciones.
+This is necessary because the model’s granularity is an application, and the requirements need to analyze both the total number of applications and the number of hires.
 
-Eliminar los registros `NOT HIRED` impediría calcular correctamente indicadores como:
+Removing the `NOT HIRED` records would prevent the correct calculation of metrics such as:
 
 ```text
 Hiring Rate =
@@ -305,18 +303,18 @@ Total Hired / Total Applications
 
 ---
 
-# 8. Modelo dimensional
+# Dimensional Model
 
-Se implementó un modelo dimensional de tipo:
+A dimensional model of the following type was implemented:
 
 # Star Schema
 
-El modelo está compuesto por:
+The model consists of:
 
-* 4 dimensiones.
-* 1 tabla de hechos.
+* 4 dimensions.
+* 1 fact table.
 
-La transformación dimensional se encuentra en:
+The dimensional transformation is located in:
 
 ```text
 src/dimensional_model.py
@@ -324,93 +322,93 @@ src/dimensional_model.py
 
 ---
 
-## 8.1 Grano de la tabla de hechos
+## Granularity of the Fact Table
 
-El grano definido es:
+The defined granularity is:
 
-> **Una fila en `fact_application` representa una aplicación de un candidato a una tecnología en una fecha y país específicos.**
+> **A row in `fact_application` represents a candidate’s application for a specific technology on a specific date and in a specific country.**
 
-Esta definición permite conservar cada aplicación como una observación individual y posteriormente analizarla desde diferentes dimensiones.
+This definition allows each application to be treated as an individual observation and subsequently analyzed from different dimensions.
 
 ---
 
-## 8.2 Dimensiones
+## Dimensions
 
 ### `dim_date`
 
-| Campo      | Descripción                 |
+| Field      | Description                 |
 | ---------- | --------------------------- |
-| `date_key` | Clave surrogate de la fecha |
-| `day`      | Día                         |
-| `month`    | Mes                         |
-| `quarter`  | Trimestre                   |
-| `year`     | Año                         |
+| `date_key` | Date surrogate key         |
+| `day`      | Day                         |
+| `month`    | Month                         |
+| `quarter`  | Quarter                   |
+| `year`     | Year                         |
 
-Durante la transformación se utiliza temporalmente `full_date` para relacionar cada aplicación con su `date_key`.
+During the transformation, `full_date` is temporarily used to link each application to its `date_key`.
 
-Sin embargo, `full_date` se elimina antes de retornar el esquema dimensional final.
+However, `full_date` is removed before the final dimensional schema is returned.
 
 ---
 
 ### `dim_candidate`
 
-| Campo           | Descripción                   |
+| Field           | Description                   |
 | --------------- | ----------------------------- |
-| `candidate_key` | Clave surrogate del candidato |
-| `first_name`    | Nombre                        |
-| `last_name`     | Apellido                      |
-| `email`         | Correo                        |
-| `yoe`           | Años de experiencia           |
-| `seniority`     | Nivel de seniority            |
+| `candidate_key` | Candidate surrogate key |
+| `first_name`    | First Name                        |
+| `last_name`     | Last Name                      |
+| `email`         | Email                        |
+| `yoe`           | Years of Experience           |
+| `seniority`     | Seniority Level            |
 
 ---
 
 ### `dim_technology`
 
-| Campo            | Descripción     |
+| Field            | Description     |
 | ---------------- | --------------- |
-| `technology_key` | Clave surrogate |
-| `technology`     | Tecnología      |
+| `technology_key` | Surrogate key |
+| `technology`     | Technology      |
 
 ---
 
 ### `dim_country`
 
-| Campo         | Descripción     |
+| Field         | Description     |
 | ------------- | --------------- |
-| `country_key` | Clave surrogate |
-| `country`     | País            |
+| `country_key` | Surrogate key |
+| `country`     | Country            |
 
 ---
 
-## 8.3 Tabla de hechos
+## 8.3 Fact Table
 
 ### `fact_application`
 
-| Campo             | Tipo lógico | Descripción                      |
+| Field             | Data Type | Description                      |
 | ----------------- | ----------- | -------------------------------- |
-| `application_key` | PK          | Clave surrogate de la aplicación |
-| `date_key`        | FK          | Referencia a `dim_date`          |
-| `candidate_key`   | FK          | Referencia a `dim_candidate`     |
-| `technology_key`  | FK          | Referencia a `dim_technology`    |
-| `country_key`     | FK          | Referencia a `dim_country`       |
-| `code_score`      | Medida      | Puntaje de Code Challenge        |
-| `interview_score` | Medida      | Puntaje de Technical Interview   |
-| `hired_indicator` | Medida      | 1 para HIRED y 0 para NOT HIRED  |
+| `application_key` | PK          | Application surrogate key |
+| `date_key`        | FK          | Foreign key to `dim_date`          |
+| `candidate_key`   | FK          | Foreign key to `dim_candidate`     |
+| `technology_key`  | FK          | Foreign key to `dim_technology`    |
+| `country_key`     | FK          | Foreign key to `dim_country`       |
+| `code_score`      | Metric      | Code Challenge score        |
+| `interview_score` | Metric      | Technical Interview score   |
+| `hired_indicator` | Metric      | 1 for HIRED and 0 for NOT HIRED  |
 
 ---
 
-## 8.4 Claves surrogate
+## surrogate keys
 
-Todas las dimensiones utilizan claves surrogate generadas secuencialmente:
+All dimensions use sequentially generated surrogate keys:
 
 ```text
 1, 2, 3, ...
 ```
 
-Estas claves son independientes de las claves naturales del origen.
+These keys are independent of the natural keys in the source.
 
-Por ejemplo, no se utiliza:
+For example, the following are not used:
 
 ```text
 email
@@ -419,17 +417,17 @@ country
 Application Date
 ```
 
-como clave primaria de las dimensiones.
+as primary keys for the dimensions.
 
-Esto permite desacoplar el modelo dimensional de los identificadores naturales del dataset.
+This allows the dimensional model to be decoupled from the dataset’s natural identifiers.
 
 ---
 
-## 8.5 Integridad durante la construcción del modelo
+## Integrity During Model Construction
 
-Para construir la tabla de hechos, cada aplicación se relaciona con las dimensiones correspondientes mediante `merge`.
+To build the fact table, each application is related to the corresponding dimensions using `merge`.
 
-Después se verifica que ninguna clave foránea haya quedado sin asignar:
+Next, the system verifies that no foreign keys have been left unassigned:
 
 ```text
 date_key
@@ -438,25 +436,15 @@ technology_key
 country_key
 ```
 
-Si alguna relación no encuentra una dimensión correspondiente, el proceso genera un error y evita continuar con una tabla de hechos inconsistente.
+If any relationship fails to find a corresponding dimension, the process generates an error and prevents the creation of an inconsistent fact table.
 
 ---
 
-## 8.6 Diagrama del modelo
+## 8.6 Model Diagram
 
-El esquema implementado corresponde al siguiente modelo estrella:
+The implemented schema corresponds to the star schema.
 
-```text
-                 dim_date
-                    │
-                    │
-dim_candidate ── fact_application ── dim_technology
-                    │
-                    │
-               dim_country
-```
-
-> En el repositorio se debe incluir el diagrama visual en:
+> The visual diagram must be included in the repository at:
 >
 > ```text
 > diagrams/star_schema.png
@@ -464,17 +452,17 @@ dim_candidate ── fact_application ── dim_technology
 
 ---
 
-# 9. Validaciones de calidad previas a la carga
+# 9. Pre-Load Quality Validations
 
-Antes de cargar los datos en MySQL se ejecutan validaciones implementadas en:
+Before loading the data into MySQL, validations implemented in the following file are run:
 
 ```text
 src/validation.py
 ```
 
-El objetivo es detectar problemas antes de insertar datos en el Data Warehouse.
+The goal is to detect issues before inserting data into the data warehouse.
 
-La función principal es:
+The main function is:
 
 ```python
 run_all_validations(df_source, star_schema)
@@ -482,16 +470,16 @@ run_all_validations(df_source, star_schema)
 
 ---
 
-## 9.1 Validación de claves primarias
+## Primary Key Validation
 
-Se verifica para cada tabla que su clave primaria:
+For each table, the following is verified regarding its primary key:
 
-* No contenga valores nulos.
-* Sea única.
+* It does not contain null values.
+* It is unique.
 
-Las claves validadas son:
+The validated keys are:
 
-| Tabla              | Clave primaria    |
+| Table              | Primary Key    |
 | ------------------ | ----------------- |
 | `dim_date`         | `date_key`        |
 | `dim_candidate`    | `candidate_key`   |
@@ -501,11 +489,11 @@ Las claves validadas son:
 
 ---
 
-## 9.2 Integridad referencial
+##  Referential Integrity
 
-Se verifica que cada clave foránea de `fact_application` exista en su dimensión correspondiente.
+The system verifies that each foreign key in `fact_application` exists in its corresponding dimension.
 
-Las relaciones verificadas son:
+The relationships checked are:
 
 ```text
 date_key
@@ -514,74 +502,74 @@ technology_key
 country_key
 ```
 
-No se permite continuar si existen:
+The process cannot continue if any of the following exist:
 
-* Valores nulos en las claves foráneas.
-* Referencias a claves inexistentes.
-* Valores huérfanos.
-
----
-
-## 9.3 Conteo de registros
-
-Se compara:
-
-```text
-Número de registros del dataset transformado
-```
-
-contra:
-
-```text
-Número de filas de fact_application
-```
-
-Esto permite verificar que durante la transformación:
-
-* No se hayan perdido aplicaciones.
-* No se hayan duplicado aplicaciones.
+* Null values in foreign keys.
+* References to nonexistent keys.
+* Orphaned values.
 
 ---
 
-## 9.4 Validación de medidas
+## Record Count
 
-Se validan las siguientes reglas:
+The following is compared:
 
-| Medida            | Regla              |
+```text
+Number of records in the transformed dataset
+```
+
+against:
+
+```text
+Number of rows in `fact_application`
+```
+
+This verifies that during the transformation:
+
+* No applications were lost.
+* No applications were duplicated.
+
+---
+
+## Metric Validation
+
+The following rules are validated:
+
+| Metric            | Rule              |
 | ----------------- | ------------------ |
-| `code_score`      | Entre 0 y 10       |
-| `interview_score` | Entre 0 y 10       |
-| `hired_indicator` | Solo valores 0 o 1 |
+| `code_score`      | Between 0 and 10       |
+| `interview_score` | Between 0 and 10       |
+| `hired_indicator` | Only values 0 or 1 |
 
-Si alguna validación crítica falla, se lanza:
+If any critical validation fails, the following is raised:
 
 ```text
 ValidationError
 ```
 
-y el pipeline no continúa hacia la carga.
+and the pipeline does not proceed to the load stage.
 
 ---
 
-# 10. Carga al Data Warehouse
+# Loading into the Data Warehouse
 
-La carga se implementó en:
+The load was implemented in:
 
 ```text
 src/load.py
 ```
 
-El motor utilizado es:
+The database engine used is:
 
 # MySQL
 
-La base de datos utilizada es:
+The database used is:
 
 ```text
 recruitment_dw
 ```
 
-La conexión se realiza utilizando:
+The connection is established using:
 
 * SQLAlchemy
 * PyMySQL
@@ -589,15 +577,15 @@ La conexión se realiza utilizando:
 
 ---
 
-## 10.1 Configuración de credenciales
+## Configuring Credentials
 
-Las credenciales se cargan desde un archivo:
+Credentials are loaded from a file:
 
 ```text
 .env
 ```
 
-Las variables utilizadas son:
+The variables used are:
 
 ```text
 DB_HOST
@@ -607,27 +595,27 @@ DB_PASSWORD
 DB_NAME
 ```
 
-El archivo `.env` no debe versionarse en Git para evitar exponer credenciales.
+The `.env` file should not be versioned in Git to avoid exposing credentials.
 
 ---
 
-## 10.2 Creación del esquema físico
+## 10.2 Creating the Physical Schema
 
-El script:
+The script:
 
 ```text
 sql/create_tables.sql
 ```
 
-crea las tablas del Data Warehouse.
+creates the Data Warehouse tables.
 
-Se incluyen:
+Included are:
 
-* Primary Keys.
-* Foreign Keys.
-* Tipos de datos correspondientes a los atributos.
+* Primary keys.
+* Foreign keys.
+* Data types corresponding to the attributes.
 
-Las claves foráneas de la tabla de hechos son:
+The foreign keys in the fact table are:
 
 ```text
 fk_fact_date
@@ -638,9 +626,9 @@ fk_fact_country
 
 ---
 
-## 10.3 Orden de carga
+## 10.3 Load Order
 
-La carga se realiza respetando las dependencias entre las tablas:
+The load is performed while respecting the dependencies between the tables:
 
 ```text
 1. dim_date
@@ -650,224 +638,203 @@ La carga se realiza respetando las dependencias entre las tablas:
 5. fact_application
 ```
 
-Primero se cargan las dimensiones y finalmente la tabla de hechos.
+The dimensions are loaded first, followed by the fact table.
 
-Este orden evita errores de integridad referencial.
+This order prevents referential integrity errors.
 
 ---
 
-# 11. Validación post-carga
+# 11. Post-Load Validation
 
-Después de cargar los datos, se realizan validaciones directamente contra MySQL.
+After loading the data, validations are performed directly against MySQL.
 
-Esto es importante porque no se valida únicamente el DataFrame en memoria, sino el resultado real almacenado en el Data Warehouse.
+This is important because it validates not only the DataFrame in memory but also the actual result stored in the data warehouse.
 
-Las validaciones incluyen:
+Validations include:
 
-## Claves primarias
+## Primary Keys
 
-Se comparan:
+The following are compared:
 
 ```sql
 COUNT(*)
 ```
 
-contra:
+against:
 
 ```sql
 COUNT(DISTINCT primary_key)
 ```
 
-y se verifica la ausencia de valores nulos.
+and the absence of null values is verified.
 
 ---
 
-## Integridad referencial
+## Referential Integrity
 
-Se utilizan consultas con `LEFT JOIN` entre `fact_application` y cada dimensión para detectar posibles registros huérfanos.
+Queries using `LEFT JOIN` between `fact_application` and each dimension are used to detect possible orphan records.
 
-La validación comprueba que todas las claves utilizadas en la tabla de hechos tengan una dimensión válida.
+The validation checks that all keys used in the fact table have a valid dimension.
 
 ---
 
-## Conteo de registros
+## Record Count
 
-Para cada tabla se compara:
+For each table, the following is compared:
 
 ```text
-Registros esperados
+Expected records
 ```
 
-contra:
+against:
 
 ```text
-Registros realmente cargados en MySQL
+Records actually loaded into MySQL
 ```
 
-La carga se considera correcta cuando todas las validaciones son satisfactorias.
+The load is considered successful when all validations pass.
 
 ---
 
-# 12. Orquestación del pipeline ETL
+# ETL Pipeline Orchestration
 
-Todo el proceso es coordinado desde:
+The entire process is coordinated from:
 
 ```text
 src/main.py
 ```
 
-El pipeline ejecuta las siguientes etapas:
+The pipeline executes the following stages:
 
 ```text
-1. EXTRACCIÓN
-2. PREPARACIÓN DE DATOS
-3. TRANSFORMACIÓN DE NEGOCIO
-4. TRANSFORMACIÓN DIMENSIONAL
-5. VALIDACIÓN DE CALIDAD PRE-CARGA
-6. CARGA AL DATA WAREHOUSE
-7. VALIDACIÓN POST-CARGA EN MYSQL
-8. FIN DEL PROCESO
+1. EXTRACTION
+2. DATA PREPARATION
+3. BUSINESS TRANSFORMATION
+4. DIMENSIONAL TRANSFORMATION
+5. PRE-LOAD QUALITY VALIDATION
+6. LOAD TO THE DATA WAREHOUSE
+7. POST-LOAD VALIDATION IN MYSQL
+8. END OF PROCESS
 ```
 
-El flujo completo puede representarse de la siguiente forma:
-
-```text
-extract_data()
-        ↓
-prepare_data()
-        ↓
-apply_business_rules()
-        ↓
-build_star_schema()
-        ↓
-run_all_validations()
-        ↓
-create_schema()
-        ↓
-load_star_schema()
-        ↓
-validate_primary_keys()
-validate_referential_integrity()
-validate_row_counts()
-```
-
-Además, el proyecto utiliza la librería `rich` para generar reportes visuales en consola durante las diferentes etapas.
+Additionally, the project uses the `rich` library to generate visual reports in the console during the different stages.
 
 ---
 
-# 13. Consultas analíticas
+# Analytical Queries
 
-Las consultas se encuentran en:
+The queries are located in:
 
 ```text
 sql/analytical_queries.sql
 ```
 
-Cada requerimiento de negocio cuenta con una consulta específica.
+Each business requirement has a specific query.
 
 ---
 
 ## R1 — Hiring Trends
 
-Analiza la evolución de:
+Analyzes trends in:
 
-* Total de aplicaciones.
-* Total de contrataciones.
+* Total applications.
+* Total hires.
 * Hiring rate.
 
-Los datos se agrupan por:
+The data is grouped by:
 
 ```text
-Año
-Mes
+Year
+Month
 ```
 
-La consulta permite identificar cómo ha evolucionado el proceso de contratación a través del tiempo.
+The query allows you to identify how the hiring process has evolved over time.
 
 ---
 
 ## R2 — Technology Analysis
 
-Analiza cada tecnología utilizando:
+Analyzes each technology using:
 
-* Total de aplicaciones.
-* Total de contrataciones.
+* Total applications.
+* Total hires.
 * Hiring rate.
-* Promedio de Code Challenge Score.
-* Promedio de Technical Interview Score.
+* Average Code Challenge Score.
+* Average Technical Interview Score.
 
-Esto permite identificar tecnologías con mayor volumen de candidatos y evaluar sus resultados de contratación.
+This allows you to identify technologies with the highest volume of candidates and evaluate their hiring results.
 
 ---
 
 ## R3 — Candidate Profile Analysis
 
-Analiza los candidatos según:
+Analyzes candidates based on:
 
 ```text
 Seniority
 ```
 
-Los indicadores calculados son:
+The calculated metrics are:
 
-* Promedio de años de experiencia.
-* Total de aplicaciones.
-* Total de contrataciones.
+* Average years of experience.
+* Total applications.
+* Total hires.
 * Hiring rate.
-* Promedio de Code Challenge Score.
-* Promedio de Technical Interview Score.
+* Average Code Challenge Score.
+* Average Technical Interview Score.
 
-Esto permite comparar los resultados de contratación entre los diferentes perfiles profesionales.
+This allows you to compare hiring results across different professional profiles.
 
 ---
 
-## R4 — Mercados de reclutamiento atractivos
 
-Analiza los países utilizando:
+##  R4 — Attractive Recruitment Markets
 
-* Total de aplicaciones.
-* Total de contrataciones.
+Analyze countries using:
+
+* Total applications.
+* Total hires.
 * Hiring rate.
 
-Los resultados se ordenan principalmente por tasa de contratación y, posteriormente, por volumen de aplicaciones.
+The results are sorted primarily by hiring rate and then by number of applications.
 
-Esto permite comparar los diferentes mercados disponibles para el proceso de reclutamiento.
+This allows for a comparison of the different markets available for the recruitment process.
 
 ---
 
-## R5 — Tecnologías con dificultades de contratación
+## R5 — Technologies with Hiring Challenges
 
-Analiza las tecnologías con menor capacidad de convertir aplicaciones en contrataciones.
+Analyzes the technologies with the lowest ability to convert applications into hires.
 
-Para evitar conclusiones basadas en muestras pequeñas, la consulta solo considera tecnologías con:
+To avoid conclusions based on small samples, the query only considers technologies with:
 
 ```text
-50 o más aplicaciones
+50 or more applications
 ```
 
-Se calculan:
+The following are calculated:
 
-* Total de aplicaciones.
-* Total de contrataciones.
+* Total applications.
+* Total hires.
 * Hiring rate.
-* Promedio de Code Challenge Score.
-* Promedio de Technical Interview Score.
+* Average Code Challenge Score.
+* Average Technical Interview Score.
 
-Los resultados se ordenan de menor a mayor `hiring_rate`.
+The results are sorted from lowest to highest `hiring_rate`.
 
 ---
 
-# 14. KPIs implementados
+# Implemented KPIs
 
-Para el dashboard se crearon indicadores principales para resumir el comportamiento general del proceso de reclutamiento.
+Key performance indicators were created for the dashboard to summarize the overall performance of the recruitment process.
 
-| KPI                         | Descripción                                               |
+| KPI                         | Description                                               |
 | --------------------------- | --------------------------------------------------------- |
-| **Total Applications**      | Número total de aplicaciones                              |
-| **Total Hired**             | Número total de candidatos contratados                    |
-| **Hiring Rate**             | Porcentaje de aplicaciones que terminaron en contratación |
-| **Average Code Score**      | Puntaje promedio de Code Challenge                        |
-| **Average Interview Score** | Puntaje promedio de Technical Interview                   |
+| **Total Applications**      | Total number of applications                              |
+| **Total Hired**             | Total number of candidates hired                    |
+| **Hiring Rate**             | Percentage of applications that resulted in a hire |
+| **Average Code Score**      | Average Code Challenge score                        |
+| **Average Interview Score** | Average Technical Interview score                   |
 
 El indicador de contratación se calcula conceptualmente como:
 
@@ -878,260 +845,235 @@ Hiring Rate =
 
 ---
 
-# 15. Dashboard en Power BI
+# Dashboard in Power BI
 
-Se desarrolló un dashboard titulado:
+A dashboard titled:
 
 # Recruitment Analytics Dashboard
 
-El dashboard permite responder visualmente los cinco requerimientos de negocio.
+was developed. The dashboard provides visual answers to the five business requirements.
 
-La interfaz incluye:
+The interface includes:
 
-* Título principal.
-* Segmentadores superiores.
-* Tarjetas KPI.
-* Cinco visualizaciones analíticas.
-* Navegación lateral.
-* Diseño visual consistente basado en tonos oscuros, morados, azules, verdes y rosados según el propósito de cada visualización.
+* Main title.
+* Top filters.
+* KPI cards.
+* Five analytical visualizations.
+* Side navigation.
+* Consistent visual design based on dark, purple, blue, green, and pink tones, depending on the purpose of each visualization.
 
-Los filtros disponibles incluyen:
+The available filters include:
 
 ```text
-Año
-Mes
-Tecnología
-País
+Year
+Month
+Technology
+Country
 Seniority
 ```
 
-Estos filtros permiten analizar los indicadores de manera interactiva.
+These filters allow for interactive analysis of the metrics.
 
 ---
 
-## KPI principales observados
+## Key KPIs Tracked
 
-A nivel general, el dashboard muestra aproximadamente:
+Overall, the dashboard shows approximately:
 
-| Indicador               | Resultado |
+| Metric               | Result |
 | ----------------------- | --------: |
-| Total Applications      |    50 mil |
-| Total Hired             |     7 mil |
-| Hiring Rate             |   13,40 % |
-| Average Code Score      |      5,00 |
-| Average Interview Score |      5,00 |
+| Total Applications      |    50,000 |
+| Total Hired             |     7,000 |
+| Hiring Rate             |   13.40% |
+| Average Code Score      |      5.00 |
+| Average Interview Score |      5.00 |
 
-Estos valores proporcionan una visión general del proceso antes de aplicar filtros específicos.
+These values provide an overview of the process before applying specific filters.
 
 ---
 
-## Visualización R1 — Evolución de aplicaciones y contrataciones
+## Visualization R1 — Trends in Applications and Hires
 
-**Tipo de gráfico:** gráfico de líneas.
+**Chart type:** line chart.
 
-**Eje X:** tiempo, utilizando los atributos disponibles de `dim_date`, principalmente año y mes.
+**X-axis:** time, using the available attributes from `dim_date`, primarily year and month.
 
-**Eje Y:** cantidad de aplicaciones y cantidad de contrataciones.
+**Y-axis:** number of applications and number of hires.
 
-**Medidas utilizadas:**
+**Metrics used:**
 
 * Total Applications.
 * Total Hired.
 
-Este gráfico permite comparar cómo evoluciona el volumen de aplicaciones frente a las contrataciones a través del tiempo.
+This chart allows you to compare how the volume of applications compares to the number of hires over time.
 
 ---
 
-## Visualización R2 — Análisis de tecnologías
+## Visualization R2 — Technology Analysis
 
-**Tipo de gráfico:** barras horizontales.
+**Chart type:** horizontal bars.
 
-El gráfico permite identificar las tecnologías con mayor número de aplicaciones y comparar su demanda dentro del proceso de reclutamiento.
+The chart allows you to identify the technologies with the highest number of applications and compare their demand within the recruitment process.
 
-La información se complementa con los indicadores y consultas analíticas para evaluar también los resultados de contratación.
-
----
-
-## Visualización R3 — Resultados por seniority
-
-**Tipo de gráfico:** barras.
-
-La visualización compara los diferentes niveles de seniority utilizando el comportamiento de contratación correspondiente a cada perfil.
-
-Esto permite identificar qué perfiles presentan mejores resultados en el proceso.
+The information is supplemented by indicators and analytical queries to also evaluate hiring results.
 
 ---
 
-## Visualización R4 — Top países
+## Visualization R3 — Results by Seniority
 
-**Tipo de gráfico:** barras horizontales.
+**Chart type:** bar chart.
 
-El gráfico muestra los países con mejores resultados de contratación, teniendo en cuenta el análisis realizado mediante el volumen de aplicaciones y la tasa de contratación.
+This visualization compares different seniority levels based on hiring performance for each profile.
 
----
-
-## Visualización R5 — Tecnologías con mayor dificultad de contratación
-
-**Tipo de gráfico:** barras horizontales.
-
-La visualización destaca las tecnologías con menor tasa de contratación, considerando únicamente aquellas con un mínimo de 50 aplicaciones.
-
-Esto evita que una tecnología con muy pocos registros genere una conclusión poco representativa.
+This allows you to identify which profiles yield the best results in the process.
 
 ---
 
-# 16. Diseño visual del dashboard
+## Visualization R4 — Top Countries
 
-El dashboard fue diseñado buscando una apariencia moderna y consistente.
+**Chart type:** horizontal bar chart.
 
-La estructura principal se divide en:
-
-```text
-┌──────────────────────────────────────────────────────────┐
-│ TÍTULO                         FILTROS                   │
-├──────────────────────────────────────────────────────────┤
-│ KPI 1 │ KPI 2 │ KPI 3 │ KPI 4 │ KPI 5                    │
-├──────────────────────────────────────────────────────────┤
-│ R1 — Evolución temporal                                 │
-├──────────────────────────────┬───────────────────────────┤
-│ R2 — Tecnologías             │ R3 — Seniority            │
-├──────────────────────────────┼───────────────────────────┤
-│ R4 — Países                  │ R5 — Tecnologías          │
-│                              │ con dificultad            │
-└──────────────────────────────┴───────────────────────────┘
-```
-
-La distribución permite que los indicadores generales se visualicen primero y que posteriormente el usuario pueda profundizar en cada uno de los requerimientos.
+The chart shows the countries with the best hiring results, based on an analysis of application volume and the hiring rate.
 
 ---
 
-# 17. Trazabilidad de requerimientos
+## Visualization R5 — Technologies with the Highest Hiring Difficulty
 
-La siguiente tabla muestra cómo cada requerimiento fue conectado con el modelo dimensional, las consultas y las visualizaciones.
+**Chart type:** horizontal bars.
 
-| Requerimiento | Dimensiones utilizadas | Medidas principales                          | Consulta SQL               | Visualización        |
-| ------------- | ---------------------- | -------------------------------------------- | -------------------------- | -------------------- |
-| **R1**        | `dim_date`             | Total Applications, Total Hired, Hiring Rate | Hiring Trends              | Línea temporal       |
-| **R2**        | `dim_technology`       | Applications, Hired, Hiring Rate, Scores     | Technology Analysis        | Barras horizontales  |
-| **R3**        | `dim_candidate`        | Experience, Hired, Hiring Rate, Scores       | Candidate Profile Analysis | Barras por seniority |
-| **R4**        | `dim_country`          | Applications, Hired, Hiring Rate             | Recruitment Markets        | Barras horizontales  |
-| **R5**        | `dim_technology`       | Applications, Hired, Hiring Rate, Scores     | Hiring Difficulties        | Barras horizontales  |
+This visualization highlights the technologies with the lowest hiring rates, considering only those with a minimum of 50 applications.
+
+This prevents a technology with very few entries from leading to an unrepresentative conclusion.
 
 ---
 
-# 18. Validación final de requerimientos
+# Requirement Traceability
+
+The following table shows how each requirement was linked to the dimensional model, queries, and visualizations.
+
+| Requirement | Dimensions Used | Key Measures                          | SQL Query               | Visualization        |
+| ------------- | ---------------------- | ------------------------------------------- - | -------------------------- | -------------------- |
+| **R1**        | `dim_date`             | Total Applications, Total Hired, Hiring Rate | Hiring Trends              | Timeline       |
+| **R2**        | `dim_technology`       | Applications, Hired, Hiring Rate, Scores     | Technology Analysis        | Horizontal bars  |
+| **R3**        | `dim_candidate`        | Experience, Hired, Hiring Rate, Scores       | Candidate Profile Analysis | Bars by seniority |
+| **R4**        | `dim_country`          | Applications, Hired, Hiring Rate             | Recruitment Markets        | Horizontal bars  |
+| **R5**        | `dim_technology`       | Applications, Hired, Hiring Rate, Scores     | Hiring Difficulties        | Horizontal bars  |
+
+---
+
+# 18. Final Validation of Requirements
 
 | Requirement | Implemented? | DW Tables Used                       | Query / KPI                                          | Main Finding                                                                                                                                     |
 | ----------- | ------------ | ------------------------------------ | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **R1**      | Yes          | `fact_application`, `dim_date`       | Total Applications, Total Hired y evolución temporal | Permite analizar la evolución de las aplicaciones y contrataciones a través del tiempo.                                                          |
-| **R2**      | Yes          | `fact_application`, `dim_technology` | Technology Analysis                                  | Permite identificar las tecnologías con mayor volumen de aplicaciones y analizar sus resultados de contratación.                                 |
-| **R3**      | Yes          | `fact_application`, `dim_candidate`  | Hiring Rate por Seniority                            | Permite comparar los resultados de contratación entre los diferentes niveles de seniority y experiencia.                                         |
-| **R4**      | Yes          | `fact_application`, `dim_country`    | Hiring Rate por Country                              | Permite identificar los países con mejores resultados y volumen dentro del proceso de reclutamiento.                                             |
-| **R5**      | Yes          | `fact_application`, `dim_technology` | Hiring Rate por Technology                           | Permite detectar tecnologías con menor capacidad de convertir aplicaciones en contrataciones, considerando muestras de al menos 50 aplicaciones. |
+| **R1**      | Yes          | `fact_application`, `dim_date`       | Total Applications, Total Hired and Trends Over Time | Allows you to analyze trends in applications and hires over time.                                                          |
+| **R2**      | Yes          | `fact_application`, `dim_technology` | Technology Analysis                                  |  It allows you to identify the technologies with the highest volume of applications and analyze their hiring results.                                 |
+| **R3**      | Yes          | `fact_application`, `dim_candidate`  | Hiring Rate por Seniority                            | It allows you to compare hiring results across different levels of seniority and experience.                                        |
+| **R4**      | Yes          | `fact_application`, `dim_country`    | Hiring Rate por Country                              | It allows you to identify the countries with the best results and highest volume in the recruitment process.                                             |
+| **R5**      | Yes          | `fact_application`, `dim_technology` | Hiring Rate por Technology                           | It allows you to identify technologies that are less effective at converting applications into contracts, based on a sample size of at least 50 applications. |
 
 ---
 
-# 19. Tecnologías utilizadas
+# Technologies Used
 
-El proyecto fue desarrollado utilizando las siguientes herramientas:
+The project was developed using the following tools:
 
-| Tecnología      | Uso                                                |
+| Technology      | Use                                                |
 | --------------- | -------------------------------------------------- |
-| Python          | Desarrollo del proceso ETL                         |
-| Pandas          | Manipulación y transformación de datos             |
-| MySQL           | Almacenamiento del Data Warehouse                  |
-| MySQL Workbench | Administración y consulta de la base de datos      |
-| SQLAlchemy      | Conexión entre Python y MySQL                      |
-| PyMySQL         | Driver de conexión a MySQL                         |
-| python-dotenv   | Gestión de variables de entorno                    |
-| Rich            | Reportes visuales en consola                       |
-| Power BI        | Visualización y análisis de datos                  |
-| Git/GitHub      | Control de versiones y almacenamiento del proyecto |
+| Python          | ETL process development                         |
+| Pandas          | Data manipulation and transformation             |
+| MySQL           | Data warehouse storage                  |
+| MySQL Workbench | Database administration and querying      |
+| SQLAlchemy      | Connection between Python and MySQL                      |
+| PyMySQL         | MySQL connection driver                         |
+| python-dotenv   | Environment variable management                    |
+| Rich            | Visual reports in the console                       |
+| Power BI        | Data visualization and analysis                  |
+| Git/GitHub      | Version control and project storage           |
 
 ---
 
-# 20. Instalación y ejecución
+# Installation and Execution
 
-## 1. Clonar el repositorio
+## 1. Clone the repository
 
 ```bash
-git clone <URL_DEL_REPOSITORIO>
+git clone <REPOSITORY_URL>
 ```
 
-## 2. Ingresar al proyecto
+## 2. Navigate to the project
 
 ```bash
 cd workshop-1
 ```
 
-## 3. Crear un entorno virtual
+## 3. Create a virtual environment
 
 ```bash
 python -m venv venv
 ```
 
-## 4. Activar el entorno virtual
+## 4. Activate the virtual environment
 
-En Windows:
+On Windows:
 
 ```bash
 venv\Scripts\activate
 ```
 
-## 5. Instalar las dependencias
+## 5. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## 6. Configurar las variables de entorno
+## 6. Set environment variables
 
-Crear un archivo `.env` con la siguiente estructura:
+Create a `.env` file with the following structure:
 
 ```env
 DB_HOST=localhost
 DB_PORT=3306
-DB_USER=tu_usuario
-DB_PASSWORD=tu_contraseña
+DB_USER=your_username
+DB_PASSWORD=your_password
 DB_NAME=recruitment_dw
 ```
 
-> El archivo `.env` no debe subirse al repositorio.
+> The `.env` file should not be committed to the repository.
 
-## 7. Crear la base de datos
+## 7. Create the database
 
-Antes de ejecutar el pipeline debe existir la base de datos:
+The database must exist before running the pipeline:
 
 ```sql
 CREATE DATABASE recruitment_dw;
 ```
 
-## 8. Ejecutar el pipeline ETL
+## 8. Run the ETL pipeline
 
-Desde la carpeta `src`:
+From the `src` folder:
 
 ```bash
 python main.py
 ```
 
-El proceso ejecutará:
+The process will run:
 
 ```text
-Extracción
-→ Preparación
-→ Transformación de negocio
-→ Transformación dimensional
-→ Validaciones pre-carga
-→ Creación de tablas
-→ Carga en MySQL
-→ Validaciones post-carga
+Extraction
+→ Preparation
+→ Business transformation
+→ Dimensional transformation
+→ Pre-load validations
+→ Table creation
+→ Load into MySQL
+→ Post-load validations
 ```
 
 ---
 
-# 21. Dependencias
+# 21. Dependencies
 
-El archivo `requirements.txt` incluye:
+The `requirements.txt` file includes:
 
 ```text
 sqlalchemy
@@ -1139,14 +1081,7 @@ pymysql
 python-dotenv
 ```
 
-Adicionalmente, el proyecto utiliza:
-
-```text
-pandas
-rich
-```
-
-Por tanto, **te recomiendo revisar tu `requirements.txt`**, porque según el código que me compartiste también estás importando `pandas` y `rich`. Para que cualquier persona pueda ejecutar correctamente el proyecto desde cero, debería quedar así:
+Additionally, the project uses:
 
 ```text
 pandas
@@ -1156,38 +1091,25 @@ pymysql
 python-dotenv
 ```
 
-Esta corrección sí te recomiendo hacerla antes de entregar el repositorio.
+# Conclusions
 
----
+The project made it possible to build a complete process, from transactional data stored in a CSV file to an analytical environment consisting of a data warehouse and an interactive dashboard.
 
-# 22. Conclusiones
+Among the project’s main results are:
 
-El proyecto permitió construir un proceso completo desde datos transaccionales almacenados en un archivo CSV hasta un entorno analítico compuesto por un Data Warehouse y un dashboard interactivo.
+* **50,000 applications** were processed.
+* All applications were retained throughout the process, including both accepted and rejected ones.
+* A business rule was implemented to automatically identify accepted applications.
+* A dimensional model was built with **4 dimensions and 1 fact table**.
+* Surrogate keys were used to decouple the dimensional model from the source’s natural keys.
+* Quality validations were implemented prior to loading.
+* Validations were performed directly in MySQL after the load.
+* Analytical queries were developed to address the five business requirements.
+* A dashboard was built in Power BI with filters, KPIs, and interactive visualizations.
+* The overall result shows approximately **7,000 hires out of 50,000 applications**, equivalent to a **hiring rate of 13.40%**.
 
-Entre los principales resultados del proyecto se encuentran:
+In conclusion, the project demonstrates a complete data engineering workflow, from extraction and transformation to the construction of a dimensional model, storage in a data warehouse, and analytical exploitation using business intelligence tools.
 
-* Se procesaron **50.000 aplicaciones**.
-* Se conservaron todas las aplicaciones durante el proceso, incluyendo las contratadas y no contratadas.
-* Se implementó una regla de negocio para identificar automáticamente las contrataciones.
-* Se construyó un modelo dimensional con **4 dimensiones y 1 tabla de hechos**.
-* Se utilizaron claves surrogate para desacoplar el modelo dimensional de las claves naturales del origen.
-* Se implementaron validaciones de calidad antes de la carga.
-* Se realizaron validaciones directamente sobre MySQL después de la carga.
-* Se desarrollaron consultas analíticas para responder los cinco requerimientos de negocio.
-* Se construyó un dashboard en Power BI con filtros, KPIs y visualizaciones interactivas.
-* El resultado general muestra aproximadamente **7 mil contrataciones sobre 50 mil aplicaciones**, equivalente a un **Hiring Rate de 13,40 %**.
-
-En conclusión, el proyecto demuestra un flujo completo de ingeniería de datos, desde la extracción y transformación hasta la construcción de un modelo dimensional, almacenamiento en un Data Warehouse y explotación analítica mediante herramientas de Business Intelligence.
-
----
-
-## Mi recomendación antes de subirlo a GitHub
-
-Hay **tres cosas** que yo ajustaría antes de darlo por terminado:
-
-1. **Cambiar `requirements.txt`** para incluir `pandas` y `rich`.
-2. **Agregar la imagen real del Star Schema** dentro de `diagrams/`.
-3. **Agregar una captura del dashboard final** al README, porque visualmente le dará mucha más fuerza al proyecto.
 
 Por ejemplo, debajo de la sección **Dashboard en Power BI** puedes insertar:
 
@@ -1204,5 +1126,3 @@ Y también convendría insertar la imagen del esquema estrella:
 
 ![Star Schema](diagrams/star_schema.png)
 ```
-
-**Esta versión ya está basada en el código que realmente compartiste y en el dashboard que construiste**, en lugar de dejar tareas como pendientes o afirmar procesos que no realizaste.
