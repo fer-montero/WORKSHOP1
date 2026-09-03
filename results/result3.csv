@@ -1,0 +1,8 @@
+seniority,avg_years_experience,total_applications,total_hired,hiring_rate,avg_code_score,avg_interview_score
+Junior,15.32,7100,977,13.76,5.08,4.99
+Architect,15.35,7079,971,13.72,4.99,5.04
+Intern,15.41,7255,985,13.58,5.01,4.97
+Trainee,15.18,7183,973,13.55,4.99,5.00
+Senior,15.17,7059,939,13.30,4.99,5.04
+Lead,15.37,7071,929,13.14,4.96,4.97
+Mid-Level,15.21,7253,924,12.74,4.96,5.01
