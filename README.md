@@ -1,6 +1,6 @@
 # WORKSHOP1
 
-## BUSINESS CONTEXT
+# BUSINESS CONTEXT
 
 Consider a company dedicated to recruiting talent in the technology sector. As part of its selection processes, it receives candidates with different professional profiles and characteristics related to their experience and knowledge in technology. For each candidate, the company has information such as their country of origin, level of seniority, years of professional experience, and the technology areas in which they specialize.
 In addition to the relevant information for each candidate, the company conducts a technical evaluation during the selection process. This evaluation consists of two main results: The Code Challenge Score, which reflects the candidate’s performance on a coding test, and the Technical Interview Score, which corresponds to the result obtained in the technical interview. 
@@ -97,7 +97,6 @@ workshop-1/
 └── README.md
 ```
 
----
 
 # Initial Data Profiling
 
@@ -144,9 +143,8 @@ Duplicate values in the `Email` column were not automatically deleted. The granu
 
 For this reason, deleting records solely because they share the same email address could result in a loss of information.
 
----
 
-# 6. Extraction Process
+# Extraction Process
 
 The extraction was implemented in:
 
@@ -266,7 +264,6 @@ are converted to categorical variables.
 
 After data preparation, an additional check is performed to identify any missing values.
 
----
 
 ## Hiring Business Rule
 
@@ -308,7 +305,6 @@ Hiring Rate =
 Total Hired / Total Applications
 ```
 
----
 
 # Dimensional Model
 
@@ -327,7 +323,6 @@ The dimensional transformation is located in:
 src/dimensional_model.py
 ```
 
----
 
 ## Granularity of the Fact Table
 
@@ -337,7 +332,6 @@ The defined granularity is:
 
 This definition allows each application to be treated as an individual observation and subsequently analyzed from different dimensions.
 
----
 
 ## Dimensions
 
@@ -355,7 +349,6 @@ During the transformation, `full_date` is temporarily used to link each applicat
 
 However, `full_date` is removed before the final dimensional schema is returned.
 
----
 
 ### `dim_candidate`
 
@@ -368,7 +361,7 @@ However, `full_date` is removed before the final dimensional schema is returned.
 | `yoe`           | Years of Experience           |
 | `seniority`     | Seniority Level            |
 
----
+
 
 ### `dim_technology`
 
@@ -377,7 +370,7 @@ However, `full_date` is removed before the final dimensional schema is returned.
 | `technology_key` | Surrogate key |
 | `technology`     | Technology      |
 
----
+
 
 ### `dim_country`
 
@@ -386,9 +379,8 @@ However, `full_date` is removed before the final dimensional schema is returned.
 | `country_key` | Surrogate key |
 | `country`     | Country            |
 
----
 
-## 8.3 Fact Table
+##  Fact Table
 
 ### `fact_application`
 
@@ -403,7 +395,7 @@ However, `full_date` is removed before the final dimensional schema is returned.
 | `interview_score` | Metric      | Technical Interview score   |
 | `hired_indicator` | Metric      | 1 for HIRED and 0 for NOT HIRED  |
 
----
+
 
 ## surrogate keys
 
@@ -428,7 +420,6 @@ as primary keys for the dimensions.
 
 This allows the dimensional model to be decoupled from the dataset’s natural identifiers.
 
----
 
 ## Integrity During Model Construction
 
@@ -445,9 +436,8 @@ country_key
 
 If any relationship fails to find a corresponding dimension, the process generates an error and prevents the creation of an inconsistent fact table.
 
----
 
-## 8.6 Model Diagram
+## Model Diagram
 
 The implemented schema corresponds to the star schema.
 
@@ -457,9 +447,8 @@ The implemented schema corresponds to the star schema.
 > diagrams/star_schema.png
 > ```
 
----
 
-# 9. Pre-Load Quality Validations
+# Pre-Load Quality Validations
 
 Before loading the data into MySQL, validations implemented in the following file are run:
 
@@ -475,7 +464,6 @@ The main function is:
 run_all_validations(df_source, star_schema)
 ```
 
----
 
 ## Primary Key Validation
 
@@ -494,7 +482,6 @@ The validated keys are:
 | `dim_country`      | `country_key`     |
 | `fact_application` | `application_key` |
 
----
 
 ##  Referential Integrity
 
@@ -515,7 +502,6 @@ The process cannot continue if any of the following exist:
 * References to nonexistent keys.
 * Orphaned values.
 
----
 
 ## Record Count
 
@@ -536,7 +522,6 @@ This verifies that during the transformation:
 * No applications were lost.
 * No applications were duplicated.
 
----
 
 ## Metric Validation
 
@@ -556,7 +541,6 @@ ValidationError
 
 and the pipeline does not proceed to the load stage.
 
----
 
 # Loading into the Data Warehouse
 
@@ -582,8 +566,6 @@ The connection is established using:
 * PyMySQL
 * python-dotenv
 
----
-
 ## Configuring Credentials
 
 Credentials are loaded from a file:
@@ -604,9 +586,8 @@ DB_NAME
 
 The `.env` file should not be versioned in Git to avoid exposing credentials.
 
----
 
-## 10.2 Creating the Physical Schema
+## Creating the Physical Schema
 
 The script:
 
@@ -631,9 +612,8 @@ fk_fact_technology
 fk_fact_country
 ```
 
----
 
-## 10.3 Load Order
+## Load Order
 
 The load is performed while respecting the dependencies between the tables:
 
@@ -649,9 +629,7 @@ The dimensions are loaded first, followed by the fact table.
 
 This order prevents referential integrity errors.
 
----
-
-# 11. Post-Load Validation
+# Post-Load Validation
 
 After loading the data, validations are performed directly against MySQL.
 
@@ -675,7 +653,6 @@ COUNT(DISTINCT primary_key)
 
 and the absence of null values is verified.
 
----
 
 ## Referential Integrity
 
@@ -683,7 +660,6 @@ Queries using `LEFT JOIN` between `fact_application` and each dimension are used
 
 The validation checks that all keys used in the fact table have a valid dimension.
 
----
 
 ## Record Count
 
@@ -701,7 +677,6 @@ Records actually loaded into MySQL
 
 The load is considered successful when all validations pass.
 
----
 
 # ETL Pipeline Orchestration
 
@@ -726,7 +701,6 @@ The pipeline executes the following stages:
 
 Additionally, the project uses the `rich` library to generate visual reports in the console during the different stages.
 
----
 
 # Analytical Queries
 
@@ -737,8 +711,6 @@ sql/analytical_queries.sql
 ```
 
 Each business requirement has a specific query.
-
----
 
 ## R1 — Hiring Trends
 
@@ -757,7 +729,6 @@ Month
 
 The query allows you to identify how the hiring process has evolved over time.
 
----
 
 ## R2 — Technology Analysis
 
@@ -771,7 +742,6 @@ Analyzes each technology using:
 
 This allows you to identify technologies with the highest volume of candidates and evaluate their hiring results.
 
----
 
 ## R3 — Candidate Profile Analysis
 
@@ -792,8 +762,6 @@ The calculated metrics are:
 
 This allows you to compare hiring results across different professional profiles.
 
----
-
 
 ##  R4 — Attractive Recruitment Markets
 
@@ -807,7 +775,6 @@ The results are sorted primarily by hiring rate and then by number of applicatio
 
 This allows for a comparison of the different markets available for the recruitment process.
 
----
 
 ## R5 — Technologies with Hiring Challenges
 
@@ -829,8 +796,6 @@ The following are calculated:
 
 The results are sorted from lowest to highest `hiring_rate`.
 
----
-
 # Implemented KPIs
 
 Key performance indicators were created for the dashboard to summarize the overall performance of the recruitment process.
@@ -843,14 +808,13 @@ Key performance indicators were created for the dashboard to summarize the overa
 | **Average Code Score**      | Average Code Challenge score                        |
 | **Average Interview Score** | Average Technical Interview score                   |
 
-El indicador de contratación se calcula conceptualmente como:
+The hiring indicator is conceptually calculated as follows:
 
 ```text
 Hiring Rate =
 (Total Hired / Total Applications) × 100
 ```
 
----
 
 # Dashboard in Power BI
 
@@ -881,7 +845,6 @@ Seniority
 
 These filters allow for interactive analysis of the metrics.
 
----
 
 ## Key KPIs Tracked
 
@@ -897,7 +860,6 @@ Overall, the dashboard shows approximately:
 
 These values provide an overview of the process before applying specific filters.
 
----
 
 ## Visualization R1 — Trends in Applications and Hires
 
@@ -914,7 +876,7 @@ These values provide an overview of the process before applying specific filters
 
 This chart allows you to compare how the volume of applications compares to the number of hires over time.
 
----
+
 
 ## Visualization R2 — Technology Analysis
 
@@ -924,7 +886,7 @@ The chart allows you to identify the technologies with the highest number of app
 
 The information is supplemented by indicators and analytical queries to also evaluate hiring results.
 
----
+
 
 ## Visualization R3 — Results by Seniority
 
@@ -934,7 +896,7 @@ This visualization compares different seniority levels based on hiring performan
 
 This allows you to identify which profiles yield the best results in the process.
 
----
+
 
 ## Visualization R4 — Top Countries
 
@@ -942,7 +904,7 @@ This allows you to identify which profiles yield the best results in the process
 
 The chart shows the countries with the best hiring results, based on an analysis of application volume and the hiring rate.
 
----
+
 
 ## Visualization R5 — Technologies with the Highest Hiring Difficulty
 
@@ -952,7 +914,7 @@ This visualization highlights the technologies with the lowest hiring rates, con
 
 This prevents a technology with very few entries from leading to an unrepresentative conclusion.
 
----
+
 
 # Requirement Traceability
 
@@ -966,9 +928,9 @@ The following table shows how each requirement was linked to the dimensional mod
 | **R4**        | `dim_country`          | Applications, Hired, Hiring Rate             | Recruitment Markets        | Horizontal bars  |
 | **R5**        | `dim_technology`       | Applications, Hired, Hiring Rate, Scores     | Hiring Difficulties        | Horizontal bars  |
 
----
 
-# 18. Final Validation of Requirements
+
+# Final Validation of Requirements
 
 | Requirement | Implemented? | DW Tables Used                       | Query / KPI                                          | Main Finding                                                                                                                                     |
 | ----------- | ------------ | ------------------------------------ | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -978,7 +940,7 @@ The following table shows how each requirement was linked to the dimensional mod
 | **R4**      | Yes          | `fact_application`, `dim_country`    | Hiring Rate por Country                              | It allows you to identify the countries with the best results and highest volume in the recruitment process.                                             |
 | **R5**      | Yes          | `fact_application`, `dim_technology` | Hiring Rate por Technology                           | It allows you to identify technologies that are less effective at converting applications into contracts, based on a sample size of at least 50 applications. |
 
----
+
 
 # Technologies Used
 
@@ -997,7 +959,7 @@ The project was developed using the following tools:
 | Power BI        | Data visualization and analysis                  |
 | Git/GitHub      | Version control and project storage           |
 
----
+
 
 # Installation and Execution
 
@@ -1076,9 +1038,8 @@ Extraction
 → Post-load validations
 ```
 
----
 
-# 21. Dependencies
+# Dependencies
 
 The `requirements.txt` file includes:
 
