@@ -70,6 +70,13 @@ workshop-1/
 ├── notebooks/
 │   └── data_profiling.py
 │
+|── results/
+│   ├── result1.csv
+│   ├── result2.csv
+│   ├── result3.csv
+│   ├── result4.csv
+│   └── result5.csv
+|
 ├── src/
 │   ├── extract.py
 │   ├── transform.py
