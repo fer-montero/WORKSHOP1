@@ -822,6 +822,7 @@ A dashboard titled:
 # Recruitment Analytics Dashboard
 
 was developed. The dashboard provides visual answers to the five business requirements.
+![Recruitment Analytics Dashboard](powerbi/dashboard.png)
 
 The interface includes:
 
