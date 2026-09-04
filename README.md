@@ -440,15 +440,11 @@ country_key
 If any relationship fails to find a corresponding dimension, the process generates an error and prevents the creation of an inconsistent fact table.
 
 
-## Model Diagram
+## Model Star Schema
 
 The implemented schema corresponds to the star schema.
 
-> The visual diagram must be included in the repository at:
->
-> ```text
-> diagrams/star_schema.png
-> ```
+![Star Schema](diagrams/star_schema.png)
 
 
 # Pre-Load Quality Validations
@@ -1080,20 +1076,3 @@ Among the project’s main results are:
 * The overall result shows approximately **7,000 hires out of 50,000 applications**, equivalent to a **hiring rate of 13.40%**.
 
 In conclusion, the project demonstrates a complete data engineering workflow, from extraction and transformation to the construction of a dimensional model, storage in a data warehouse, and analytical exploitation using business intelligence tools.
-
-
-Por ejemplo, debajo de la sección **Dashboard en Power BI** puedes insertar:
-
-```md
-## Vista del Dashboard
-
-![Recruitment Analytics Dashboard](ruta/a/tu/imagen.png)
-```
-
-Y también convendría insertar la imagen del esquema estrella:
-
-```md
-## Modelo Star Schema
-
-![Star Schema](diagrams/star_schema.png)
-```
